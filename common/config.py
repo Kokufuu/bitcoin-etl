@@ -1,15 +1,17 @@
 from enum import Enum
 
+
 # API
 class Api(Enum):
-    BLOCK_BY_TIMESTAMP = 'v1/mining/blocks/timestamp/'
-    BLOCK_BY_HASH = 'block/'
-    BLOCK_BY_HEIGHT = 'block-height/'
-    BLOCKS = 'blocks/'
-    TXS_SEGMENTS = '/txs/'
-    TX_IDS_SEGMENT = '/txids/'
+    BLOCK_BY_TIMESTAMP = "v1/mining/blocks/timestamp/"
+    BLOCK_BY_HASH = "block/"
+    BLOCK_BY_HEIGHT = "block-height/"
+    BLOCKS = "blocks/"
+    TXS_SEGMENTS = "/txs/"
+    TX_IDS_SEGMENT = "/txids/"
 
-BASE_URL = 'http://umbrel.local:3006/api/'
+
+BASE_URL = "http://umbrel.local:3006/api/"
 
 # HTTP
 DEFAULT_TIMEOUT = 10

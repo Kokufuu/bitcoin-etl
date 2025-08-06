@@ -14,10 +14,12 @@ class Pool(DTOModel):
         slug: str URL-friendly version of the name (used in links or APIs, e.g., foundry-usa).
         miner_names: list[str] List of known miner aliases or names used by this pool in the coinbase signature or tag.
     """
+
     id: int
     name: str
     slug: str
-    miner_names: Optional[list[str]] = Field(alias='minerNames')
+    miner_names: Optional[list[str]] = Field(alias="minerNames")
+
 
 class Extras(DTOModel):
     """Additional information about a block.
@@ -46,28 +48,30 @@ class Extras(DTOModel):
         pool: Pool Mining pool related information.
         similarity: float Percentage similarity between actual block and predicted block template.
     """
+
     header: str
     reward: int
-    median_fee: float = Field(alias='medianFee')
-    fee_range: list[float] = Field(alias='feeRange')
-    total_fees: int = Field(alias='totalFees')
-    avg_fee: int = Field(alias='avgFee')
-    avg_fee_rate: int = Field(alias='avgFeeRate')
-    coinbase_raw: str = Field(alias='coinbaseRaw')
-    coinbase_address: str = Field(alias='coinbaseAddress')
-    coinbase_addresses: list[str] = Field(alias='coinbaseAddresses')
-    coinbase_signature: str = Field(alias='coinbaseSignature')
-    utxo_set_change: int = Field(alias='utxoSetChange')
-    avg_tx_size: float = Field(alias='avgTxSize')
-    total_inputs: int = Field(alias='totalInputs')
-    total_outputs: int = Field(alias='totalOutputs')
-    total_output_amt: int = Field(alias='totalOutputAmt')
-    segwit_total_txs: int = Field(alias='segwitTotalTxs')
-    segwit_total_size: int = Field(alias='segwitTotalSize')
-    segwit_total_weight: int = Field(alias='segwitTotalWeight')
-    virtual_size: float = Field(alias='virtualSize')
+    median_fee: float = Field(alias="medianFee")
+    fee_range: list[float] = Field(alias="feeRange")
+    total_fees: int = Field(alias="totalFees")
+    avg_fee: int = Field(alias="avgFee")
+    avg_fee_rate: int = Field(alias="avgFeeRate")
+    coinbase_raw: str = Field(alias="coinbaseRaw")
+    coinbase_address: str = Field(alias="coinbaseAddress")
+    coinbase_addresses: list[str] = Field(alias="coinbaseAddresses")
+    coinbase_signature: str = Field(alias="coinbaseSignature")
+    utxo_set_change: int = Field(alias="utxoSetChange")
+    avg_tx_size: float = Field(alias="avgTxSize")
+    total_inputs: int = Field(alias="totalInputs")
+    total_outputs: int = Field(alias="totalOutputs")
+    total_output_amt: int = Field(alias="totalOutputAmt")
+    segwit_total_txs: int = Field(alias="segwitTotalTxs")
+    segwit_total_size: int = Field(alias="segwitTotalSize")
+    segwit_total_weight: int = Field(alias="segwitTotalWeight")
+    virtual_size: float = Field(alias="virtualSize")
     pool: Pool
     similarity: Optional[float] = None
+
 
 class Block(DTOModel):
     """Detailed information about a block.
@@ -88,6 +92,7 @@ class Block(DTOModel):
         median_time: int Median of the last 11 block timestamps (used for consensus).
         extras: Extras Additional information about a block.
     """
+
     id: str
     height: int
     version: int
@@ -99,6 +104,6 @@ class Block(DTOModel):
     tx_count: int
     size: int
     weight: int
-    previous_block_hash: str = Field(alias='previousblockhash')
-    median_time: int = Field(alias='mediantime')
+    previous_block_hash: str = Field(alias="previousblockhash")
+    median_time: int = Field(alias="mediantime")
     extras: Extras

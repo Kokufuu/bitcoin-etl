@@ -2,8 +2,15 @@ import logging
 from typing import Callable, TypeVar
 
 import requests
-from tenacity import (retry, stop_after_attempt, wait_exponential, retry_if_exception_type,
-                      before_log, before_sleep_log, after_log)
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+    before_log,
+    before_sleep_log,
+    after_log,
+)
 
 from common.config import Api, BASE_URL
 from common.config import DEFAULT_TIMEOUT
@@ -22,7 +29,12 @@ retry_decorator = retry(
 )
 
 
-def api_builder(endpoint: Api, resource_id: str | int = "", suffix: Api = "", start_index: int | None = None) -> str:
+def api_builder(
+    endpoint: Api,
+    resource_id: str | int = "",
+    suffix: Api = "",
+    start_index: int | None = None,
+) -> str:
     url = f"{BASE_URL}{endpoint.value}"
 
     if resource_id != "":
@@ -38,6 +50,7 @@ def api_builder(endpoint: Api, resource_id: str | int = "", suffix: Api = "", st
 
 
 T = TypeVar("T")
+
 
 @retry_decorator
 def _fetch(url: str, timeout: int, extractor: Callable[[requests.Response], T]) -> T:

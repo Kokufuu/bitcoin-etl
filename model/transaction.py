@@ -12,6 +12,7 @@ class Status(DTOModel):
         block_hash (str): The hash of the block containing the transaction.
         block_time (int): The timestamp of the block containing the transaction.
     """
+
     confirmed: bool
     block_height: int
     block_hash: str
@@ -28,10 +29,11 @@ class TxOutput(DTOModel):
         script_pubkey_address (str): The address derived from the script, if recognizable.
         value (int): The amount of satoshis in the UTXO or output.
     """
-    script_pubkey: str = Field(alias='scriptpubkey')
-    script_pubkey_asm: str = Field(alias='scriptpubkey_asm')
-    script_pubkey_type: str = Field(alias='scriptpubkey_type')
-    script_pubkey_address: str = Field(alias='scriptpubkey_address')
+
+    script_pubkey: str = Field(alias="scriptpubkey")
+    script_pubkey_asm: str = Field(alias="scriptpubkey_asm")
+    script_pubkey_type: str = Field(alias="scriptpubkey_type")
+    script_pubkey_address: str = Field(alias="scriptpubkey_address")
     value: int
 
 
@@ -54,16 +56,17 @@ class TxInput(DTOModel):
         inner_witness_script_asm (str):
             The assembly form of the script that gets evaluated in P2WSH or nested SegWit transactions.
     """
-    prev_tx_id: str = Field(alias='txid')
-    v_out: int = Field(alias='vout')
-    prev_out: TxOutput | None = Field(alias='prevout')
-    script_sig: str = Field(alias='scriptsig')
-    script_sig_asm: str = Field(alias='scriptsig_asm')
+
+    prev_tx_id: str = Field(alias="txid")
+    v_out: int = Field(alias="vout")
+    prev_out: TxOutput | None = Field(alias="prevout")
+    script_sig: str = Field(alias="scriptsig")
+    script_sig_asm: str = Field(alias="scriptsig_asm")
     witness: list[str]
     is_coinbase: bool
     sequence: int
-    inner_redeem_script_asm: str = Field(alias='inner_redeemscript_asm')
-    inner_witness_script_asm: str = Field(alias='inner_witnessscript_asm')
+    inner_redeem_script_asm: str = Field(alias="inner_redeemscript_asm")
+    inner_witness_script_asm: str = Field(alias="inner_witnessscript_asm")
 
 
 class Transaction(DTOModel):
@@ -87,14 +90,15 @@ class Transaction(DTOModel):
         fee (int): Total fee paid (difference between input and output values, in satoshis).
         status (Status): Transaction status.
     """
-    tx_id: str = Field(alias='txid')
-    v_size: float = Field(alias='vsize')
-    fee_per_vsize: float = Field(alias='feePerVsize')
-    effective_fee_per_vsize: float = Field(alias='effectiveFeePerVsize')
+
+    tx_id: str = Field(alias="txid")
+    v_size: float = Field(alias="vsize")
+    fee_per_vsize: float = Field(alias="feePerVsize")
+    effective_fee_per_vsize: float = Field(alias="effectiveFeePerVsize")
     version: int
-    lock_time: int = Field(alias='locktime')
-    v_in: list[TxInput] = Field(alias='vin')
-    v_out: list[TxOutput] = Field(alias='vout')
+    lock_time: int = Field(alias="locktime")
+    v_in: list[TxInput] = Field(alias="vin")
+    v_out: list[TxOutput] = Field(alias="vout")
     size: int
     weight: int
     fee: int

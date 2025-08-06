@@ -8,7 +8,8 @@ logger = setup_logger(__name__)
 
 def create_block_tables(cursor: sqlite3.Cursor):
     """Creating all tables necessary for blocks."""
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_BLOCKS} (
             height INTEGER PRIMARY KEY,
             id TEXT NOT NULL,
@@ -24,9 +25,11 @@ def create_block_tables(cursor: sqlite3.Cursor):
             previous_block_hash TEXT NOT NULL,
             median_time INTEGER NOT NULL
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_EXTRAS} (
             height INTEGER PRIMARY KEY,
             header TEXT NOT NULL,
@@ -50,26 +53,32 @@ def create_block_tables(cursor: sqlite3.Cursor):
             similarity REAL,
             FOREIGN KEY (height) REFERENCES blocks(height) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_FEE_RANGE} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             height INTEGER NOT NULL,
             fee REAL NOT NULL,
             FOREIGN KEY (height) REFERENCES blocks(height) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_COINBASE_ADDRESSES} (
             height INTEGER PRIMARY KEY,
             address TEXT NOT NULL,
             FOREIGN KEY (height) REFERENCES blocks(height) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_POOLS} (
             height INTEGER PRIMARY KEY,
             id INTEGER NOT NULL,
@@ -77,23 +86,27 @@ def create_block_tables(cursor: sqlite3.Cursor):
             slug TEXT,
             FOREIGN KEY (height) REFERENCES blocks(height) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_MINERS} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             height INTEGER NOT NULL,
             name TEXT,
             FOREIGN KEY (height) REFERENCES blocks(height) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
     logger.info("Block related tables created.")
 
 
 def create_transaction_tables(cursor: sqlite3.Cursor):
     """Creating all tables necessary for transactions."""
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_TRANSACTIONS} (
             tx_id TEXT PRIMARY KEY,
             block_height INTEGER NOT NULL,
@@ -107,9 +120,11 @@ def create_transaction_tables(cursor: sqlite3.Cursor):
             fee INTEGER NOT NULL,
             FOREIGN KEY (block_height) REFERENCES blocks(height) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_TX_OUTPUTS} (
             tx_id TEXT,
             v_out_index INTEGER NOT NULL,
@@ -121,9 +136,11 @@ def create_transaction_tables(cursor: sqlite3.Cursor):
             PRIMARY KEY (tx_id, v_out_index),
             FOREIGN KEY (tx_id) REFERENCES transactions(tx_id) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_TX_INPUTS} (
             tx_id TEXT,
             v_in_index INTEGER NOT NULL,
@@ -138,16 +155,19 @@ def create_transaction_tables(cursor: sqlite3.Cursor):
             PRIMARY KEY (tx_id, v_in_index),
             FOREIGN KEY (tx_id) REFERENCES transactions(tx_id) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
-    cursor.execute(f"""
+    cursor.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS {TABLE_WITNESSES} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tx_id TEXT NOT NULL,
             witness TEXT NOT NULL,
             FOREIGN KEY (tx_id) REFERENCES transactions(tx_id) ON DELETE CASCADE
         )
-    """)
+    """
+    )
 
     logger.info("Transaction related tables created.")
 
