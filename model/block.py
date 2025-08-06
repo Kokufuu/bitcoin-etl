@@ -1,8 +1,11 @@
-from pydantic import BaseModel, Field
 from typing import Optional
 
+from pydantic import Field
 
-class Pool(BaseModel):
+from model.dto import DTOModel
+
+
+class Pool(DTOModel):
     """Mining pool related information.
 
     Attributes:
@@ -14,9 +17,9 @@ class Pool(BaseModel):
     id: int
     name: str
     slug: str
-    miner_names: list[str] | None = Field(alias='minerNames')
+    miner_names: Optional[list[str]] = Field(alias='minerNames')
 
-class Extras(BaseModel):
+class Extras(DTOModel):
     """Additional information about a block.
 
     Attributes:
@@ -66,7 +69,7 @@ class Extras(BaseModel):
     pool: Pool
     similarity: Optional[float] = None
 
-class Block(BaseModel):
+class Block(DTOModel):
     """Detailed information about a block.
 
     Attributes:

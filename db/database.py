@@ -1,9 +1,10 @@
 import sqlite3
 
-from common.constant import *
+from common.config import *
 from common.logger import setup_logger
 
 logger = setup_logger(__name__)
+
 
 def create_block_tables(cursor: sqlite3.Cursor):
     """Creating all tables necessary for blocks."""
@@ -110,20 +111,21 @@ def create_transaction_tables(cursor: sqlite3.Cursor):
 
     cursor.execute(f"""
         CREATE TABLE IF NOT EXISTS {TABLE_TX_OUTPUTS} (
-            tx_id TEXT NOT NULL,
+            tx_id TEXT,
             v_out_index INTEGER NOT NULL,
             script_pubkey TEXT NOT NULL,
             script_pubkey_asm TEXT NOT NULL,
             script_pubkey_type TEXT NOT NULL,
             script_pubkey_address TEXT NOT NULL,
             value INTEGER NOT NULL,
-            FOREIGN KEY (tx_id) REFERENCES transactions(id) ON DELETE CASCADE
+            PRIMARY KEY (tx_id, v_out_index),
+            FOREIGN KEY (tx_id) REFERENCES transactions(tx_id) ON DELETE CASCADE
         )
     """)
 
     cursor.execute(f"""
         CREATE TABLE IF NOT EXISTS {TABLE_TX_INPUTS} (
-            tx_id TEXT NOT NULL,
+            tx_id TEXT,
             v_in_index INTEGER NOT NULL,
             prev_tx_id TEXT NOT NULL,
             v_out_index INTEGER NOT NULL,
@@ -133,7 +135,8 @@ def create_transaction_tables(cursor: sqlite3.Cursor):
             sequence INTEGER NOT NULL,
             inner_redeem_script_asm TEXT NOT NULL,
             inner_witness_script_asm TEXT NOT NULL,
-            FOREIGN KEY (tx_id) REFERENCES transactions(id) ON DELETE CASCADE
+            PRIMARY KEY (tx_id, v_in_index),
+            FOREIGN KEY (tx_id) REFERENCES transactions(tx_id) ON DELETE CASCADE
         )
     """)
 
@@ -142,7 +145,7 @@ def create_transaction_tables(cursor: sqlite3.Cursor):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tx_id TEXT NOT NULL,
             witness TEXT NOT NULL,
-            FOREIGN KEY (tx_id) REFERENCES transactions(id) ON DELETE CASCADE
+            FOREIGN KEY (tx_id) REFERENCES transactions(tx_id) ON DELETE CASCADE
         )
     """)
 

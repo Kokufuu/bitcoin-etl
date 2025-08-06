@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from model.block import DTOModel
 
 
-class Status(BaseModel):
+class Status(DTOModel):
     """Transaction status.
 
     Attributes:
@@ -16,7 +18,7 @@ class Status(BaseModel):
     block_time: int
 
 
-class TxOutput(BaseModel):
+class TxOutput(DTOModel):
     """Previous output details.
 
     Attributes:
@@ -33,7 +35,7 @@ class TxOutput(BaseModel):
     value: int
 
 
-class TxInput(BaseModel):
+class TxInput(DTOModel):
     """Transaction input.
 
     Attributes:
@@ -64,7 +66,7 @@ class TxInput(BaseModel):
     inner_witness_script_asm: str = Field(alias='inner_witnessscript_asm')
 
 
-class Transaction(BaseModel):
+class Transaction(DTOModel):
     """Detailed information about a transaction.
 
     Attributes:

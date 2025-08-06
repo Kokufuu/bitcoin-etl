@@ -1,12 +1,15 @@
-# API
-MEMPOOL_SPACE_API_BASE_URL = 'http://umbrel.local:3006/api/'
+from enum import Enum
 
-BLOCK_BY_TIMESTAMP_URL = MEMPOOL_SPACE_API_BASE_URL + 'v1/mining/blocks/timestamp/'
-BLOCK_BY_HASH_URL = MEMPOOL_SPACE_API_BASE_URL + 'block/'
-BLOCK_BY_HEIGHT_URL = MEMPOOL_SPACE_API_BASE_URL + 'block-height/'
-BLOCKS_URL = MEMPOOL_SPACE_API_BASE_URL + 'blocks/'
-TRANSACTION_POSTFIX = '/txs/'
-TRANSACTION_IDS_POSTFIX = '/txids/'
+# API
+class Api(Enum):
+    BLOCK_BY_TIMESTAMP = 'v1/mining/blocks/timestamp/'
+    BLOCK_BY_HASH = 'block/'
+    BLOCK_BY_HEIGHT = 'block-height/'
+    BLOCKS = 'blocks/'
+    TXS_SEGMENTS = '/txs/'
+    TX_IDS_SEGMENT = '/txids/'
+
+BASE_URL = 'http://umbrel.local:3006/api/'
 
 # HTTP
 DEFAULT_TIMEOUT = 10

@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from common.constant import LOGGER_FORMAT
+from common.config import LOGGER_FORMAT
 
 
 def setup_logger(name: str, level=logging.INFO) -> logging.Logger:
