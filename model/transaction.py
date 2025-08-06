@@ -24,8 +24,10 @@ class TxOutput(DTOModel):
 
     Attributes:
         script_pubkey (str): The hex-encoded locking script that controls who can spend this output.
-        script_pubkey_asm (str): The human-readable representation of script_pubkey using Bitcoin opcodes.
-        script_pubkey_type (str): Type of script used — most common values: p2pkh, p2sh, p2wpkh, p2tr.
+        script_pubkey_asm (str):
+            The human-readable representation of script_pubkey using Bitcoin opcodes.
+        script_pubkey_type (str):
+            Type of script used — most common values: p2pkh, p2sh, p2wpkh, p2tr.
         script_pubkey_address (str): The address derived from the script, if recognizable.
         value (int): The amount of satoshis in the UTXO or output.
     """
@@ -49,12 +51,14 @@ class TxInput(DTOModel):
         witness (list[str]):
             Witness data for SegWit transactions.
             Each item in the list is a hex-encoded data element (e.g., signatures, public keys).
-        is_coinbase (bool): True if this is a coinbase input (mining reward); such txs don’t have a real tx_id.
-        sequence (int): Optional sequence number (used with nLockTime for advanced transaction logic).
-        inner_redeem_script_asm (str):
-            The assembly form of the script that gets evaluated in P2SH or nested SegWit transactions.
-        inner_witness_script_asm (str):
-            The assembly form of the script that gets evaluated in P2WSH or nested SegWit transactions.
+        is_coinbase (bool):
+            True if this is a coinbase input (mining reward); such txs don’t have a real tx_id.
+        sequence (int):
+            Optional sequence number (used with nLockTime for advanced transaction logic).
+        inner_redeem_script_asm (str): The assembly form of the script that gets evaluated
+            in P2SH or nested SegWit transactions.
+        inner_witness_script_asm (str): The assembly form of the script that gets evaluated
+            in P2WSH or nested SegWit transactions.
     """
 
     prev_tx_id: str = Field(alias="txid")
@@ -73,12 +77,13 @@ class Transaction(DTOModel):
     """Detailed information about a transaction.
 
     Attributes:
-        tx_id (str): Transaction ID (hash of the transaction data); uniquely identifies the transaction.
+        tx_id (str): Transaction ID (hash of the transaction data).
         v_size (int): The virtual size of the transaction in bytes.
-        fee_per_vsize (int): The actual fee rate paid by the transaction, in satoshis per virtual byte (sat/vB).
+        fee_per_vsize (int): The actual fee rate paid by the transaction,
+            in satoshis per virtual byte (sat/vB).
         effective_fee_per_vsize (int):
-            The minimum effective fee rate that would be required to keep the transaction in the mempool,
-            considering ancestor/descendant relationships and dynamic mempool rules.
+            The minimum effective fee rate that would be required to keep the transaction
+            in the mempool, considering ancestor/descendant relationships and dynamic mempool rules.
         version (int): Transaction format version number; used to interpret the structure.
         lock_time (int):
             The earliest time or block height when the transaction can be added

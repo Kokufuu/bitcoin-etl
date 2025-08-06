@@ -12,7 +12,8 @@ class Pool(DTOModel):
         id: int Unique internal identifier of the mining pool.
         name: str Human-readable name of the pool (e.g., "AntPool", "Foundry USA").
         slug: str URL-friendly version of the name (used in links or APIs, e.g., foundry-usa).
-        miner_names: list[str] List of known miner aliases or names used by this pool in the coinbase signature or tag.
+        miner_names: list[str]
+            List of known miner aliases or names used by this pool in the coinbase signature or tag.
     """
 
     id: int

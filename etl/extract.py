@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from common.config import Api
+from common.config import DATETIME_FORMAT, Api
 from common.logger import setup_logger
 from model.block import Block
 from model.transaction import Transaction
@@ -22,7 +22,7 @@ def get_block_hash_by_height(height_of_block: int) -> str:
     Raises:
         requests.exceptions.HTTPError: If the HTTP request returns an unsuccessful status code.
     """
-    logger.debug(f"Getting block hash at height {height_of_block}.")
+    logger.debug(f"Getting block hash {height_of_block}.")
     return fetch_text(api_builder(Api.BLOCK_BY_HEIGHT, height_of_block))
 
 
@@ -40,7 +40,7 @@ def get_block_by_timestamp(timestamp: int) -> Block:
         requests.exceptions.HTTPError: If the HTTP request returns an unsuccessful status code.
     """
     logger.debug(
-        f"Getting block closest to timestamp {datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')}."
+        f"Getting block closest to {datetime.fromtimestamp(timestamp).strftime(DATETIME_FORMAT)}."
     )
     json_response = fetch_json(api_builder(Api.BLOCK_BY_TIMESTAMP, timestamp))
     logger.debug(f"Got block meta at height {json_response["height"]}.")
@@ -61,9 +61,7 @@ def get_block_by_hash(hash_of_block: str) -> Block:
         requests.exceptions.HTTPError: If the HTTP request returns an unsuccessful status code.
     """
     logger.debug(f"Getting block by hash {hash_of_block}.")
-    return Block.model_validate(
-        fetch_json(api_builder(Api.BLOCK_BY_HASH, hash_of_block))
-    )
+    return Block.model_validate(fetch_json(api_builder(Api.BLOCK_BY_HASH, hash_of_block)))
 
 
 def get_block_by_height(height_of_block: int) -> Block:
@@ -79,7 +77,7 @@ def get_block_by_height(height_of_block: int) -> Block:
     Raises:
         requests.exceptions.HTTPError: If the HTTP request returns an unsuccessful status code.
     """
-    logger.debug(f"Getting block at height {height_of_block}.")
+    logger.debug(f"Getting block {height_of_block}.")
     block_hash = get_block_hash_by_height(height_of_block)
     return Block.model_validate(get_block_by_hash(block_hash))
 
@@ -100,12 +98,10 @@ def get_block_batch(start_height: int = None) -> list[Block]:
         requests.exceptions.HTTPError: If the HTTP request returns an unsuccessful status code.
     """
     if start_height is None:
-        logger.debug(f"Getting 10 latest blocks.")
+        logger.debug("Getting 10 latest blocks.")
         response = fetch_json(api_builder(Api.BLOCKS))
     else:
-        logger.debug(
-            f"Getting blocks between height {start_height} and {start_height - 9}."
-        )
+        logger.debug(f"Getting blocks between height {start_height} and {start_height - 9}.")
         response = fetch_json(api_builder(Api.BLOCKS, start_height))
 
     return [Block.model_validate(block) for block in response]
@@ -125,14 +121,10 @@ def get_transaction_ids(hash_of_block: str) -> list[str]:
         requests.exceptions.HTTPError: If the HTTP request returns an unsuccessful status code.
     """
     logger.debug(f"Getting all transaction IDs from block by hash {hash_of_block}.")
-    return list(
-        fetch_json(api_builder(Api.BLOCK_BY_HASH, hash_of_block, Api.TX_IDS_SEGMENT))
-    )
+    return list(fetch_json(api_builder(Api.BLOCK_BY_HASH, hash_of_block, Api.TX_IDS_SEGMENT)))
 
 
-def get_transactions_batch(
-    hash_of_block: str, start_index: int = 0
-) -> list[Transaction]:
+def get_transactions_batch(hash_of_block: str, start_index: int = 0) -> list[Transaction]:
     """
     Returns a list of transactions in the block (up to 10 transactions beginning at start_index).
 
@@ -171,9 +163,7 @@ def get_all_transactions_from_block(hash_of_block: str) -> list[Transaction]:
     logger.debug(f"Getting all transactions from block by hash {hash_of_block}.")
     all_transactions = []
     block = get_block_by_hash(hash_of_block)
-    logger.info(
-        f"Fetching {block.tx_count} transactions from block at height {block.height}."
-    )
+    logger.info(f"Fetching {block.tx_count} transactions from block {block.height}.")
     for i in range(0, block.tx_count, 10):
         transactions = get_transactions_batch(hash_of_block, i)
         all_transactions.extend(transaction for transaction in transactions)

@@ -1,7 +1,19 @@
 import sqlite3
 from contextlib import contextmanager
 
-from common.config import *
+from common.config import (
+    DB_NAME,
+    TABLE_BLOCKS,
+    TABLE_COINBASE_ADDRESSES,
+    TABLE_EXTRAS,
+    TABLE_FEE_RANGE,
+    TABLE_MINERS,
+    TABLE_POOLS,
+    TABLE_TRANSACTIONS,
+    TABLE_TX_INPUTS,
+    TABLE_TX_OUTPUTS,
+    TABLE_WITNESSES,
+)
 from common.logger import setup_logger
 from model.block import Block
 from model.transaction import Transaction
@@ -26,9 +38,7 @@ def db_cursor(schema_name=DB_NAME):
         conn.close()
 
 
-def batch_insert(
-    cursor: sqlite3.Cursor, table_name: str, columns: list[str], values: list[tuple]
-):
+def batch_insert(cursor: sqlite3.Cursor, table_name: str, columns: list[str], values: list[tuple]):
     placeholders = ", ".join(["?"] * len(columns))
     col_str = ", ".join(columns)
     cursor.executemany(
@@ -70,15 +80,13 @@ def insert_block(block: Block, schema_name: str = DB_NAME) -> None:
                     block.median_time,
                 ),
             )
-            logger.debug(
-                f"Block at height {block.height} inserted into table '{TABLE_BLOCKS}'."
-            )
+            logger.debug(f"Block {block.height} inserted into table '{TABLE_BLOCKS}'.")
 
             cursor.execute(
                 f"""
                 INSERT OR REPLACE INTO {TABLE_EXTRAS} (
                     height, header, reward, median_fee, total_fees, avg_fee, avg_fee_rate,
-                    coinbase_raw, coinbase_address, coinbase_signature, utxo_set_change, 
+                    coinbase_raw, coinbase_address, coinbase_signature, utxo_set_change,
                     avg_tx_size, total_inputs, total_outputs, total_output_amt, segwit_total_txs,
                     segwit_total_size, segwit_total_weight, virtual_size, similarity
                 )
@@ -107,9 +115,7 @@ def insert_block(block: Block, schema_name: str = DB_NAME) -> None:
                     block.extras.similarity,
                 ),
             )
-            logger.debug(
-                f"Extras for block at height {block.height} inserted into table '{TABLE_EXTRAS}'."
-            )
+            logger.debug(f"Extras for block {block.height} inserted into table '{TABLE_EXTRAS}'.")
 
             batch_insert(
                 cursor,
@@ -118,20 +124,18 @@ def insert_block(block: Block, schema_name: str = DB_NAME) -> None:
                 [(block.height, fee) for fee in block.extras.fee_range],
             )
             logger.debug(
-                f"Fee range for block at height {block.height} inserted into table '{TABLE_FEE_RANGE}'."
+                f"Fee range for block {block.height} inserted into table '{TABLE_FEE_RANGE}'."
             )
 
             batch_insert(
                 cursor,
                 TABLE_COINBASE_ADDRESSES,
                 ["height", "address"],
-                [
-                    (block.height, address)
-                    for address in block.extras.coinbase_addresses
-                ],
+                [(block.height, address) for address in block.extras.coinbase_addresses],
             )
             logger.debug(
-                f"Coinbase addresses for block at height {block.height} inserted into table '{TABLE_COINBASE_ADDRESSES}'."
+                f"Coinbase addresses for block {block.height}"
+                f" inserted into table '{TABLE_COINBASE_ADDRESSES}'."
             )
 
             cursor.execute(
@@ -146,25 +150,20 @@ def insert_block(block: Block, schema_name: str = DB_NAME) -> None:
                     block.extras.pool.slug,
                 ),
             )
-            logger.debug(
-                f"Extras for block at height {block.height} inserted into table '{TABLE_POOLS}'."
-            )
+            logger.debug(f"Extras for block {block.height} inserted into table '{TABLE_POOLS}'.")
 
             if block.extras.pool.miner_names is not None:
                 batch_insert(
                     cursor,
                     TABLE_MINERS,
                     ["height", "name"],
-                    [
-                        (block.height, miner_name)
-                        for miner_name in block.extras.pool.miner_names
-                    ],
+                    [(block.height, miner_name) for miner_name in block.extras.pool.miner_names],
                 )
                 logger.debug(
-                    f"Miner names for block at height {block.height} inserted into table '{TABLE_MINERS}'."
+                    f"Miner names for block {block.height} inserted into table '{TABLE_MINERS}'."
                 )
 
-            logger.info(f"Block at height {block.height} inserted into database.")
+            logger.info(f"Block {block.height} inserted into database.")
 
     except Exception as e:
         logger.error(f"Error while inserting block into database: {e}")
@@ -184,8 +183,8 @@ def insert_transaction(tx: Transaction, schema_name: str = DB_NAME) -> None:
             cursor.execute(
                 f"""
                 INSERT OR REPLACE INTO {TABLE_TRANSACTIONS} (
-                    tx_id, block_height, v_size, fee_per_vsize, effective_fee_per_vsize,
-                    version, lock_time, size, weight, fee 
+                    tx_id, block_height, v_size, fee_per_vsize,
+                    effective_fee_per_vsize, version, lock_time, size, weight, fee
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
@@ -202,9 +201,7 @@ def insert_transaction(tx: Transaction, schema_name: str = DB_NAME) -> None:
                     tx.fee,
                 ),
             )
-            logger.debug(
-                f"Transaction {tx.tx_id} inserted into table '{TABLE_TRANSACTIONS}'."
-            )
+            logger.debug(f"Transaction {tx.tx_id} inserted into table '{TABLE_TRANSACTIONS}'.")
 
             tx_outputs = [
                 (
@@ -278,11 +275,7 @@ def insert_transaction(tx: Transaction, schema_name: str = DB_NAME) -> None:
                 cursor,
                 TABLE_WITNESSES,
                 ["tx_id", "witness"],
-                [
-                    (tx.tx_id, witness)
-                    for v_input in tx.v_in
-                    for witness in v_input.witness
-                ],
+                [(tx.tx_id, witness) for v_input in tx.v_in for witness in v_input.witness],
             )
             logger.debug(
                 f"Witness for transaction {tx.tx_id} inserted into table '{TABLE_WITNESSES}'."

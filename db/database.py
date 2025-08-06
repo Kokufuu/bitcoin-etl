@@ -1,6 +1,18 @@
 import sqlite3
 
-from common.config import *
+from common.config import (
+    DB_NAME,
+    TABLE_BLOCKS,
+    TABLE_COINBASE_ADDRESSES,
+    TABLE_EXTRAS,
+    TABLE_FEE_RANGE,
+    TABLE_MINERS,
+    TABLE_POOLS,
+    TABLE_TRANSACTIONS,
+    TABLE_TX_INPUTS,
+    TABLE_TX_OUTPUTS,
+    TABLE_WITNESSES,
+)
 from common.logger import setup_logger
 
 logger = setup_logger(__name__)

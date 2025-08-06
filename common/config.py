@@ -19,6 +19,9 @@ DEFAULT_TIMEOUT = 10
 # Logging
 LOGGER_FORMAT = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 
+# Time
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 # Database
 DB_NAME = "bitcoin_etl.db"
 TABLE_BLOCKS = "blocks"

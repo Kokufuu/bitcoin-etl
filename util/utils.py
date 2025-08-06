@@ -3,17 +3,16 @@ from typing import Callable, TypeVar
 
 import requests
 from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_exponential,
-    retry_if_exception_type,
+    after_log,
     before_log,
     before_sleep_log,
-    after_log,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
 )
 
-from common.config import Api, BASE_URL
-from common.config import DEFAULT_TIMEOUT
+from common.config import BASE_URL, DEFAULT_TIMEOUT, Api
 from common.logger import setup_logger
 
 logger = setup_logger(__name__)
